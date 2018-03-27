@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="container">
-  @include('larapolls::poll_partial_v4', ['poll' => Hannoma\Larapolls\Models\Poll::where('id', 1)->first()])
+  {!! Hannoma\Larapolls\PollDrawer::draw(3) !!}
 
 </div>
 @endsection

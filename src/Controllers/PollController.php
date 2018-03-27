@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Hannoma\Larapolls\Requests\CreatePollRequest;
 use Spatie\Permission\Models\Permission;
 use App\User;
+use App;
 
 class PollController extends Controller
 {
@@ -20,7 +21,6 @@ class PollController extends Controller
         return view('larapolls::polls_v3', ['polls' => $this->getPolls($request), 'category' => $category]);
       }
 	  }
-
     public function vote(Request $request){
       $multiple = true;
       $pro = true;

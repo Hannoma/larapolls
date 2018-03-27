@@ -2,6 +2,8 @@
 namespace Hannoma\Larapolls;
 
 use Illuminate\Support\ServiceProvider;
+use Hannoma\Larapolls\Commands\PermissionSetup;
+use Hannoma\Larapolls\PollDrawer;
 
 class LarapollsServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,6 @@ class LarapollsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
     /**
      * Boot What is needed
@@ -31,8 +32,8 @@ class LarapollsServiceProvider extends ServiceProvider
         // config
         $this->publishes([
           __DIR__.'/config/larapolls.php' => config_path('larapolls.php'),
-          //__DIR__.'/views' => resource_path('views/vendor/larapolls'),
-          //__DIR__.'/translations' => resource_path('lang/vendor/larapolls'),
+          __DIR__.'/views' => resource_path('views/vendor/larapolls'),
+          __DIR__.'/translations' => resource_path('lang/vendor/larapolls'),
         ]);
 
         //ARTISAN

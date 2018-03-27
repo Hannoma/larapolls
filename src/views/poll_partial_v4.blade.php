@@ -79,7 +79,10 @@
     <br>
     @endforeach
       <footer class="blockquote-footer">
-        {{ __('larapolls::larapolls.text_poll_created_by') }} <a href="">{{$poll->getCreator()->{config('larapolls.username_key')} }}</a>
+        {{ __('larapolls::larapolls.text_poll_created_by') }}
+        <a href="{{route(config('larapolls.routes.profile'), [config('larapolls.routes.profile_argument') => $poll->getCreator()->{config('larapolls.routes.profile_arg_value')}])}}">
+          {{$poll->getCreator()->{config('larapolls.username_key')} }}
+        </a>
         {{ __('larapolls::larapolls.text_poll_created_at', ['date' => date(config('larapolls.date_format'), strtotime($poll->created_at))]) }}
         @if($poll->finishes_at != 0)
         <strong>{{ __('larapolls::larapolls.text_poll_finishes', ['date' => date(config('larapolls.date_format'), strtotime($poll->finishes_at))]) }}</strong>
