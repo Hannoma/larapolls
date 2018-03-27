@@ -25,5 +25,6 @@
         "psr-4": {
             "Hannoma\\Larapolls\\": "src"
         }
-    }
+    },
+    "minimum-stability": "stable"
 }
