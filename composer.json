@@ -3,6 +3,7 @@
     "description": "Create, view and manage polls in Laravel Framework",
     "type": "package",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Hannes Drescher",
@@ -26,5 +27,4 @@
             "Hannoma\\Larapolls\\": "src"
         }
     },
-    "minimum-stability": "stable"
 }
