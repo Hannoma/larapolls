@@ -19,7 +19,7 @@
       }
     },
     "require": {
-        "spatie/laravel-permission": "dev-master"
+        "spatie/laravel-permission": "stable"
     },
     "autoload": {
         "psr-4": {
