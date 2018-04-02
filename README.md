@@ -6,8 +6,8 @@ Laravel package for displaying, creating and managing polls with permissions!
     * [Localization](#localization)
     * [Views](#views)
 * [Usage](#usage)
-   *[Permission Setup](#permission-setup)
-   *[Displaying Polls](#displaying-polls)
+   * [Permission Setup](#permission-setup)
+   * [Displaying Polls](#displaying-polls)
    
 
 ## Installation
