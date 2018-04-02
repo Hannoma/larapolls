@@ -9,12 +9,14 @@ use Hannoma\Larapolls\Models\Poll_Option;
 use Illuminate\Support\Facades\Auth;
 use Hannoma\Larapolls\Requests\CreatePollRequest;
 use Spatie\Permission\Models\Permission;
+use Hannoma\Larapolls\Helpers\StandardPermissionsHelper;
 use App\User;
 use App;
 
 class PollController extends Controller
 {
     public function home(Request $request, $category = null){
+      StandardPermissionsHelper::giveStandardPermission();
       if(config('larapolls.bootstrap_v4')){
         return view('larapolls::polls_v4', ['polls' => $this->getPolls($request), 'category' => $category]);
       } else {
@@ -65,15 +67,19 @@ class PollController extends Controller
     public function allowPoll(Request $request){
       $poll = Poll::where('id', $request->input('allowpollid'))->first();
       if($poll){
-        $poll->allowed = true;
-        $poll->save();
+        if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll')) || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPollWithCategory') . $poll->category)){
+          $poll->allowed = true;
+          $poll->save();
+        }
       }
       return redirect()->back();
     }
     public function deletePoll(Request $request){
       $poll = Poll::where('id', $request->input('deletepollid'))->first();
       if($poll){
-        $poll->delete();
+        if((config('larapolls.delete_own_poll') && Auth::user()->id == $poll->created_by) || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')) || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePollWithCategory') . $poll->category)){
+          $poll->delete();
+        }
       }
       return redirect()->back();
     }
@@ -139,6 +145,11 @@ class PollController extends Controller
       if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollSticky'))) $sticky = false;
       if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollContra'))) $contra = false;
       if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollMultiple'))) $multiple = false;
+      if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll'))){
+        if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPollWithCategory') . $category)){
+          $allowed = false;
+        }
+      }
       if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.createNewCategory'))){
         if(!Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollWithCategory') . $category)){
           $request->session()->flash('status', __('larapolls::larapolls.message_notAllowed'));

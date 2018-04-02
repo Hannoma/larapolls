@@ -3,7 +3,7 @@
     @if($poll->allowed == 0)
     <div class="alert alert-danger" role="alert">{{__('larapolls::larapolls.information_pollNotAllowed')}}
       @if(!Auth::guest())
-        @if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll')))
+        @if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll'))  || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPollWithCategory') . $poll->category))
         <button type="button" class="btn btn-warning" data-target="#allowModal" data-toggle="modal" data-pollid="{{$poll->id}}">{{__('larapolls::larapolls.action_allowPoll')}}</button>
         @endif
       @endif
@@ -11,9 +11,9 @@
     @endif
     <h3>{{$poll->topic}} <small> - {{$poll->votes}} {{ trans_choice('larapolls::larapolls.text_votes', $poll->votes) }}</small> <a href="{{route('larapolls.category', ['category' => $poll->category])}}"><span class="badge badge-dark"><i class="fas fa-tag"></i> {{$poll->category}}</span></a>
       @if(!Auth::guest())
-      @if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')))
-      <button type="button" class="btn btn-warning" data-target="#deleteModal" data-toggle="modal" data-pollid="{{$poll->id}}">{{__('larapolls::larapolls.action_deletePoll')}}</button>
-      @endif
+        @if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')) || (config('larapolls.delete_own_poll') && Auth::user()->id == $poll->created_by)  || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePollWithCategory') . $poll->category))
+          <button type="button" class="btn btn-danger" data-target="#deleteModal" data-toggle="modal" data-pollid="{{$poll->id}}">{{__('larapolls::larapolls.action_deletePoll')}}</button>
+        @endif
       @endif
     </h3>
   </div>
@@ -42,12 +42,12 @@
             @endif
           @else
             @if($poll->multiple)
-              <button class="{{$option->hasRatedBootstrapCode(Auth::user()->id,true)}}" disabled><i class="fas fa-plus"></i></button>
+            <a class="btn btn-outline-success" role="button"><i class="fas fa-plus"></i></a>
               @if($poll->contra)
-                <button class="{{$option->hasRatedBootstrapCode(Auth::user()->id,false)}}" disabled><i class="fas fa-minus"></i></button>
+                <a class="btn btn-outline-danger" role="button"><i class="fas fa-minus"></i></a>
               @endif
             @else
-              <button class="{{$option->hasRatedBootstrapCode(Auth::user()->id,true)}}" disabled><i class="fas fa-check"></i></button>
+            <a class="btn btn-outline-success" role="button"><i class="fas fa-check"></i></a>
             @endif
           @endif
         @else

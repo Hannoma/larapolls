@@ -29,6 +29,7 @@
     </form>
   </div>
 	<hr>
+  {!!Hannoma\Larapolls\PollDrawer::draw(1)!!}
   <!-- All Polls -->
   @if (count($polls) > 0)
 		<h2>{{ __('larapolls::larapolls.text_currentPolls') }}</h2>
@@ -67,7 +68,7 @@
 							@include('larapolls::poll_partial_v4', ['poll' => $poll])
 						@else
 							@if(!Auth::guest())
-								@if(Auth::user()->hasPermissionTo(config('larapolls.permissions.prefix') . config('larapolls.permissions.showPollWithCategory') . $poll->category) || Auth::user()->hasPermissionTo(config('larapolls.permissions.prefix') . config('larapolls.permissions.showAllCategories')))
+								@if(Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.showPollWithCategory') . $poll->category) || Auth::user()->can(config('larapolls.permissions.prefix') . config('larapolls.permissions.showAllCategories')))
 									@include('larapolls::poll_partial_v4', ['poll' => $poll])
 								@endif
 							@endif
@@ -124,10 +125,10 @@
         <p>{{__('larapolls::larapolls.message_deletePoll')}}</p>
       </div>
       <div class="modal-footer">
-				<form class="" action="{{route('larapolls.delete')}}" method="post">
+				<form action="{{route('larapolls.delete')}}" method="post">
 					<input type="hidden" name="deletepollid" id="deletepollid" value="">
 					{{ csrf_field() }}
-					<button type="button" class="btn btn-primary">{{__('larapolls::larapolls.action_deletePoll')}}</button>
+					<button type="submit" class="btn btn-primary">{{__('larapolls::larapolls.action_deletePoll')}}</button>
 				</form>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('larapolls::larapolls.action_close')}}</button>
       </div>

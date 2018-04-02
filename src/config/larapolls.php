@@ -116,13 +116,21 @@ return [
   |--------------------------------------------------------------------------
   |
   | Here you can specify the permission names
-  | If you already have run "php artisan larapolls:setup_admin {user_id}", do not change this!
+  | If you already have run "php artisan larapolls:setup_roles" or added some permissions, do not change this!
   |
   */
   'permissions' => [
     //Prefix for all permissions
     'prefix' => 'larapolls_',
+
+    // "STANDARD" PERMISSIONS
+
     // The user is allowed to create a new poll
+      // BUT the user must have the permission to post the poll in a category
+      // If the user has the permission to create new categories, he can choose freely
+      // If the user has only one (or more) permissions to create a poll in a specific category (See below 'createPollWithCategory'),
+      // he can choose from these categories
+      // Therefore if the user has not any of these permissions, he can see the "create a poll" form, but CAN'T create a poll!
     'createPoll' => 'createPoll',
     // The user is allowed to create a sticky poll
     'createPollSticky' => 'createPollSticky',
@@ -131,22 +139,44 @@ return [
     // The user is allowed to create a poll where negative votes are allowed
     // REQUIRES multiple Poll !
     'createPollContra' => 'createPollContra',
+
+    // ADMIN PERMISSIONS
+
     //The user is allowed to unlock/allow other polls
     'allowPoll' => 'allowPoll',
     //the user is allowed to delete any poll
     'deletePoll' => 'deletePoll',
     //The user is allowed to create a poll with any (existing or not) category
     'createNewCategory' => 'createNewCategory',
-    //The user can view polls of all categories even protected ones
+    //The user can view and vote polls of all categories even protected ones
     'showAllCategories' => 'showAllCategories',
-    //The user is allowed to create polls (only) in this category
-    //This can be set for more than one category
+
+    // THE FOLLOWING PERMISSIONS ARE CATEGORY SPECIFIC
+    // These can be set for more than one category!
+
+      // Specific categories
+    //The user is able to allow polls of this category
+    //Please give the permission: {PREFIX for Larapolls}_allowPollWithCategory_{Your Category goes here}
+    'allowPollWithCategory' => 'allowPollWithCategory_',
+    //The user is able to delete polls of this category
+    //Please give the permission: {PREFIX for Larapolls}_allowPollWithCategory_{Your Category goes here}
+    'deletePollWithCategory' => 'deletePollWithCategory_',
+    //The user is allowed to create polls in this category
     //Please give the permission: {PREFIX for Larapolls}_createPollWithCategory_{Your Category goes here}
     'createPollWithCategory' => 'createPollWithCategory_',
-    //The user is allowed to view polls of the protected category
+      // Protected categories
+    //The user is allowed to view and vote polls of the protected category
     //Please give the permission: {PREFIX for Larapolls}_showPollWithCategory_{Your Protected Category goes here}
     'showPollWithCategory' => 'showPollWithCategory_',
   ],
+  //!! CAUTION: Every user gets these permissions!
+    // Maybe you also want to specify a "general" category where ALL User can create Polls
+    // Do this be adding the permission 'createPollWithCategory_{Your "general" category name}'
+  'standard_permissions' => [
+    'createPoll', 'createPollSticky', 'createPollMultiple', 'createPollContra'
+  ],
+  // The user is allowed to delete his own polls!
+  'delete_own_poll' => true,
 
   /*
   |--------------------------------------------------------------------------
@@ -159,6 +189,6 @@ return [
   |
   */
   'protectedCategories' => [
-    'test',
+
   ],
 ];

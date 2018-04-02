@@ -2,16 +2,13 @@
 
 namespace Hannoma\Larapolls;
 
+use Hannoma\Larapolls\Models\Poll;
+
 class PollDrawer{
 
-  /**
-  * Draw a Poll
-  *
-  * @param $poll_id
-  */
-
-  public function draw($poll_id){
+  public static function draw($poll_id){
     $poll = Poll::findOrFail($poll_id);
+    StandardPermissionsHelper::giveStandardPermission();
     if(config('larapolls.bootstrap_v4')){
       return view('larapolls::poll_partial_v4', ['poll' => $poll]);
     } else {

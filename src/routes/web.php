@@ -7,10 +7,10 @@ Route::group(['namespace' => 'Hannoma\Larapolls\Controllers', 'prefix' => config
       Route::get('/create/{category?}', ['uses' => 'PollController@showCreatePoll', 'as'=> 'larapolls.create']);
       Route::post('/create', ['uses' => 'PollController@postCreatePoll', 'as' => 'larapolls.create']);
     });
-    Route::group(['middleware' => config('larapolls.authMiddleware'), ['permission:'. config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')]], function () {
+    Route::group(['middleware' => config('larapolls.authMiddleware')], function () {
       Route::post('/delete', ['uses' => 'PollController@deletePoll', 'as' => 'larapolls.delete']);
     });
-    Route::group(['middleware' => config('larapolls.authMiddleware'), ['permission:'. config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll')]], function () {
+    Route::group(['middleware' => config('larapolls.authMiddleware')], function () {
       Route::post('/allow', ['uses' => 'PollController@allowPoll', 'as' => 'larapolls.allow']);
     });
 });
