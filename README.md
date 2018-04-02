@@ -6,6 +6,9 @@ Laravel package for displaying, creating and managing polls with permissions!
     * [Localization](#localization)
     * [Views](#views)
 * [Usage](#usage)
+   *[Permission Setup](#permission-setup)
+   *[Displaying Polls](#displaying-polls)
+   
 
 ## Installation
 You can install the package via composer:
@@ -261,6 +264,7 @@ After publishing the vendor files of this package, you can find the localization
 Supported languages by this package are:
 * English
 * German
+
 If you want to add your locale, create the folder `resources/lang/vendor/larapolls/YOUR LOCALE/`. Then just copy the `larapolls.php` localization file of another locale and translate the strings. If you add your locale, I would be very thankful if you create a pull request with your locale ^^
 
 ### Views
@@ -288,16 +292,16 @@ class User extends Authenticatable
     // ...
 }
 ```
+### Permission Setup
+This package comes with artisan commands to setup permissions for different roles and categories.
+Just run `php artisan larapolls:setup_roles` and use these options:
+* `--A` or `--admin` for a admin role
+* `--M` or `--moderator` for a moderator (bound to a specific category)
+* `--D` or `--defaultMember` for a member of a specific category
 
-If you want to setup your user as an Larapolls admin run this artisan command:
-```bash
-php artisan larapolls:setup_admin {Here goes the ID of your user model}
-```
-This command adds the role `larapolls_admin` which has all the relevant permissions.
-As an admin you can create, allow and delete polls!
 
 
-### Displaying polls
+### Displaying Polls
 All polls are displayed on the `larapolls.home` route.
 
 You can display polls of a category with the `larapolls.category` route which takes the parameter `category`.
