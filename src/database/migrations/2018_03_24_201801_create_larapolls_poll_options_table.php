@@ -13,7 +13,7 @@ class CreateLarapollsPollOptionsTable extends Migration
             $table->integer('poll_id')->unsigned();
             $table->string('option');
             $table->foreign('poll_id')
-              ->references('id')->on(config('larapolls.database_table_prefix').'_polls')
+              ->references('id')->on('larapolls_polls')
               ->onDelete('cascade');
         });
     }

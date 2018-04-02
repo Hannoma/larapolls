@@ -36,35 +36,57 @@ class PermissionSetup extends Command
      */
     public function handle()
     {
-      if($this->argument('admin')){
-        $this->info('Creating the admin role');
-
-        $adminRole = Role::create(['name' => config('larapolls.permissions.prefix') . 'admin']);
-        $adminPermission = array();
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPoll')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollSticky')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollMultiple')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollContra')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createNewCategory')]));
-        array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.showAllCategories')]));
-        $adminRole->syncPermissions($adminPermission);
+      if($this->option('admin')){
+        if(Role::where('name', 'larapolls_admin')){$this->info('Admin role exist!');} else {
+          $this->info('Creating the admin role');
+          $adminRole = Role::create(['name' => config('larapolls.permissions.prefix') . 'admin']);
+          $adminPermission = array();
+          $p = Permission::where('name', config('larapolls.permissions.prefix') . config('larapolls.permissions.createPoll'))->first();
+          if($p){
+            array_push($adminPermission, $p);
+          } else {
+            array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPoll')]));
+          }
+          $p = Permission::where('name', config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollSticky'))->first();
+          if($p){
+            array_push($adminPermission, $p);
+          } else {
+            array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollMultiple')]));
+          }
+          $p = Permission::where('name', config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollMultiple'))->first();
+          if($p){
+            array_push($adminPermission, $p);
+          } else {
+            array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollContra')]));
+          }
+          $p = Permission::where('name', config('larapolls.permissions.prefix') . config('larapolls.permissions.createPollContra'))->first();
+          if($p){
+            array_push($adminPermission, $p);
+          } else {
+            array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.showPollWithCategory') . $cat]));
+          }
+          array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.allowPoll')]));
+          array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.deletePoll')]));
+          array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.createNewCategory')]));
+          array_push($adminPermission, Permission::create(['name' => config('larapolls.permissions.prefix') . config('larapolls.permissions.showAllCategories')]));
+          $adminRole->syncPermissions($adminPermission);
+        }
 
         if ($this->confirm('Do you want to add users to the role?')) {
-          $ids = $this->ask('Please enter the IDs of the users you want to add to this role! If you want to add multiple, then put a space in between them');
-          foreach ($ids as $id) {
+          while(true){
+            $id = $this->ask('Please enter the ID of the user you want to add to this role! Repeat for every user you want to add. To exit enter a invalid id!');
             $u = User::where('id', $id)->first();
             if($u){
               $u->assignRole('larapolls_admin');
             } else {
               $this->error('User with id ' . $id . " could not be found!");
+              break;
             }
           }
         }
         $this->info('Everthing is set up!');
       }
-      if($this->argument('moderator')){
+      if($this->option('moderator')){
         $this->info('Creating the moderator role');
         $cat = $this->ask('For which category do you want to configure the moderator?');
         if($cat == ""){$this->error('The category should not be blank!');} else {
@@ -97,13 +119,14 @@ class PermissionSetup extends Command
             $role->syncPermissions($permissions);
 
             if ($this->confirm('Do you want to add users to the role?')) {
-              $ids = $this->ask('Please enter the IDs of the users you want to add to this role! If you want to add multiple, then put a space in between them');
-              foreach ($ids as $id) {
+              while(true){
+                $id = $this->ask('Please enter the ID of the user you want to add to this role! Repeat for every user you want to add. To exit enter a invalid id!');
                 $u = User::where('id', $id)->first();
                 if($u){
-                  $u->assignRole('larapolls_moderator_' . $cat);
+                  $u->assignRole('larapolls_moderator_'.$cat);
                 } else {
                   $this->error('User with id ' . $id . " could not be found!");
+                  break;
                 }
               }
             }
@@ -113,7 +136,7 @@ class PermissionSetup extends Command
           }
         }
       }
-      if($this->argument('defaultMember')){
+      if($this->option('defaultMember')){
         $this->info('Creating the member role');
         $cat = $this->ask('For which category do you want to configure the member?');
         if($cat == ""){$this->error('The category should not be blank!');} else {
@@ -139,13 +162,14 @@ class PermissionSetup extends Command
             $role->syncPermissions($permissions);
 
             if ($this->confirm('Do you want to add users to the role?')) {
-              $ids = $this->ask('Please enter the IDs of the users you want to add to this role! If you want to add multiple, then put a space in between them');
-              foreach ($ids as $id) {
+              while(true){
+                $id = $this->ask('Please enter the ID of the user you want to add to this role! Repeat for every user you want to add. To exit enter a invalid id!');
                 $u = User::where('id', $id)->first();
                 if($u){
-                  $u->assignRole('larapolls_member_' . $cat);
+                  $u->assignRole('larapolls_member_'.$cat);
                 } else {
                   $this->error('User with id ' . $id . " could not be found!");
+                  break;
                 }
               }
             }

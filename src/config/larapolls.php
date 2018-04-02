@@ -159,7 +159,7 @@ return [
     //Please give the permission: {PREFIX for Larapolls}_allowPollWithCategory_{Your Category goes here}
     'allowPollWithCategory' => 'allowPollWithCategory_',
     //The user is able to delete polls of this category
-    //Please give the permission: {PREFIX for Larapolls}_allowPollWithCategory_{Your Category goes here}
+    //Please give the permission: {PREFIX for Larapolls}_deletePollWithCategory_{Your Category goes here}
     'deletePollWithCategory' => 'deletePollWithCategory_',
     //The user is allowed to create polls in this category
     //Please give the permission: {PREFIX for Larapolls}_createPollWithCategory_{Your Category goes here}

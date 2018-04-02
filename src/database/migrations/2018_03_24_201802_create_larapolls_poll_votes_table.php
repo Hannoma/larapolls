@@ -17,7 +17,7 @@ class CreateLarapollsPollVotesTable extends Migration
               ->references('id')->on('users')
               ->onDelete('cascade');
             $table->foreign('poll_option_id')
-              ->references('id')->on(config('larapolls.database_table_prefix').'_poll_options')
+              ->references('id')->on('larapolls_poll_options')
               ->onDelete('cascade');
         });
     }

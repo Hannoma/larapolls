@@ -29,7 +29,6 @@
     </form>
   </div>
 	<hr>
-  {!!Hannoma\Larapolls\PollDrawer::draw(1)!!}
   <!-- All Polls -->
   @if (count($polls) > 0)
 		<h2>{{ __('larapolls::larapolls.text_currentPolls') }}</h2>
