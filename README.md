@@ -2,6 +2,7 @@
 Laravel package for displaying, creating and managing polls with permissions!
 ___
 [Demo](https://hannoma.de/projekte/larapolls)
+
 [In use](https://hannoma.de/polls)
 ___
 * [Installation](#installation)
