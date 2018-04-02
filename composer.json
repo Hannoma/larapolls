@@ -3,6 +3,7 @@
     "description": "Create, view and manage polls in Laravel Framework",
     "type": "package",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Hannes Drescher",
@@ -19,7 +20,7 @@
       }
     },
     "require": {
-        "spatie/laravel-permission": "dev-master"
+        "spatie/laravel-permission": "*"
     },
     "autoload": {
         "psr-4": {
